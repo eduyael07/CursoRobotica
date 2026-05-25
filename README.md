@@ -8,7 +8,7 @@ Repositorio del curso de Robótica donde se documentan tareas, prácticas y el d
 
 ***Carrera***: Ingenieria Mecatronica
 
-![wall-e](img\walle.webp)
+![wall-e](imagenes\1.webp)
 
 ---
 
