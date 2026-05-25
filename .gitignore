@@ -1,0 +1,21 @@
+ros/robot_ws/build
+ros/robot_ws/install
+ros/robot_ws/log
+
+# Entornos virtuales
+venv/
+env/
+.venv/
+
+# Archivos Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VSCode
+.vscode/
+
+# Variables de entorno
+.env

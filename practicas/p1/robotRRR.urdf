@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<robot name="robot_rrrp">
+
+  <!-- BASE -->
+
+  <link name="base_link">
+
+    <visual>
+      <geometry>
+        <cylinder radius="0.08" length="0.05"/>
+      </geometry>
+
+      <material name="blue">
+        <color rgba="0 0.2 0.7 1"/>
+      </material>
+    </visual>
+
+  </link>
+
+
+  <!-- COLUMNA -->
+
+  <link name="link1">
+
+    <visual>
+
+      <origin xyz="0 0 0.15"/>
+
+      <geometry>
+        <cylinder radius="0.025" length="0.30"/>
+      </geometry>
+
+      <material name="dark gray">
+        <color rgba="0.3 0.3 0.3 1"/>
+      </material>
+
+    </visual>
+
+  </link>
+
+  <!-- JOINT 1 -->
+ 
+
+  <joint name="joint1" type="revolute">
+
+    <parent link="base_link"/>
+    <child link="link1"/>
+
+    <origin xyz="0 0 0.025"/>
+
+    <!-- Giro vertical -->
+    <axis xyz="0 0 1"/>
+
+    <limit
+      lower="-3.14"
+      upper="3.14"
+      effort="20"
+      velocity="1"/>
+
+  </joint>
+
+
+  <!-- ESLABÓN 2 -->
+
+
+  <link name="link2">
+
+    <visual>
+
+      <origin xyz="0.12 0 0"/>
+
+      <geometry>
+        <box size="0.24 0.04 0.04"/>
+      </geometry>
+
+      <material name="dark gray">
+        <color rgba="0.3 0.3 0.3 1"/>
+      </material>
+
+    </visual>
+
+  </link>
+
+  <!-- JOINT 2 -->
+  <!-- Movimiento horizontal -->
+
+
+  <joint name="joint2" type="revolute">
+
+    <parent link="link1"/>
+    <child link="link2"/>
+
+    <origin xyz="-0.02 0 0.32"/>
+
+
+    <axis xyz="0 0 1"/>
+
+    <limit
+      lower="-1.57"
+      upper="1.57"
+      effort="10"
+      velocity="1"/>
+
+  </joint>
+
+  <!-- ESLABÓN 3 -->
+ 
+  <link name="link3">
+
+    <visual>
+
+
+      <origin xyz="0.06 0 0.035"/>
+
+      <geometry>
+        <box size="0.20 0.035 0.035"/>
+      </geometry>
+
+      <material name="dark gray">
+        <color rgba="0.3 0.3 0.3 1"/>
+      </material>
+
+    </visual>
+
+  </link>
+
+
+  <!-- JOINT 3 -->
+  <!-- Movimiento horizontal -->
+
+
+  <joint name="joint3" type="revolute">
+
+    <parent link="link2"/>
+    <child link="link3"/>
+
+    <origin xyz="0.24 0 0"/>
+
+    <axis xyz="0 0 1"/>
+
+    <limit
+      lower="-1.57"
+      upper="1.57"
+      effort="10"
+      velocity="1"/>
+
+  </joint>
+
+  <!-- ESLABÓN VERTICAL (PRISMÁTICO) -->
+
+
+  <link name="vertical_tool1">
+
+    <visual>
+
+
+      <origin xyz="0 0 -0.052"/>
+
+      <geometry>
+        <cylinder radius="0.012" length="0.08"/>
+      </geometry>
+
+      <material name="dark gray">
+        <color rgba="0.3 0.3 0.3 1"/>
+      </material>
+
+    </visual>
+
+  </link>
+
+
+  <!-- JOINT 4 -->
+  <!-- Movimiento arriba-abajo -->
+
+
+  <joint name="joint4" type="fixed">
+
+    <parent link="link3"/>
+    <child link="vertical_tool1"/>
+
+
+    <origin xyz="0.15 0 0.03"/>
+
+
+    <axis xyz="0 0 1"/>
+
+    <limit
+      lower="-0.10"
+      upper="0.00"
+      effort="10"
+      velocity="0.2"/>
+
+  </joint>
+
+    <!-- ================================================= -->
+
+    <link name="vertical_tool2">
+
+    <visual>
+
+      <!-- Cilindro vertical -->
+      <origin xyz="0 0 -0.06"/>
+
+      <geometry>
+        <cylinder radius="0.008" length="0.10"/>
+      </geometry>
+
+      <material name="back">
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+
+    </visual>
+
+  </link>
+
+
+  <!-- JOINT 5 -->
+  <!-- Movimiento arriba-abajo -->
+ 
+
+  <joint name="joint5" type="prismatic">
+
+    <parent link="vertical_tool1"/>
+    <child link="vertical_tool2"/>
+
+    <!-- Final del brazo -->
+    <origin xyz="0 0 0"/>
+
+    <!-- Movimiento vertical -->
+    <axis xyz="0 0 1"/>
+
+    <limit
+      lower="-0.05"
+      upper="0.00"
+      effort="10"
+      velocity="0.2"/>
+
+  </joint>
+
+  
+
+</robot>
