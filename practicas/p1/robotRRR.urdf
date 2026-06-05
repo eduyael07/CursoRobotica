@@ -93,7 +93,7 @@
     <origin xyz="-0.02 0 0.32"/>
 
 
-    <axis xyz="0 0 1"/>
+    <axis xyz="0 1 0"/>
 
     <limit
       lower="-1.57"
