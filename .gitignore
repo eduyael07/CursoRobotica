@@ -19,3 +19,5 @@ __pycache__/
 
 # Variables de entorno
 .env
+
+proyecto/src/log/build_*/
