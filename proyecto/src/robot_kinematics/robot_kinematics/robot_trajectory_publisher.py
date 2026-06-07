@@ -9,9 +9,7 @@ class PublicadorTrayectoria(Node):
   def __init__(self):
     super().__init__("nodo_publicador")
     # Instanciar robot
-    self.robot = Robot(
-      l=(0.30, 0.45, 0.0)
-    )
+    self.robot = Robot()
     # Suscriptor para posiciones deseadas (Twist)
     self.sub_twist = self.create_subscription(Twist, 
                                               "/goals_twist",
@@ -73,8 +71,8 @@ class PublicadorTrayectoria(Node):
             self.js_current.position[1],
             self.js_current.position[2]), 
       xi_f=(msg.point.x, 
-            msg.point.z, 
-            0))
+            msg.point.y, 
+            0.30))
     self.get_logger().info("Posición final EF: {}".format
     (self.robot.xi_m[:, self.robot.muestras - 1]))
 

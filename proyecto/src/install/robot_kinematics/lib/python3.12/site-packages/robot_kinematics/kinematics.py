@@ -4,75 +4,43 @@ import matplotlib.pyplot as plt
 import math
 
 class Robot():
-  def __init__(self, 
-               l:tuple[float]=(0.3, 0.3, 0.3)):
-    
+  def __init__(self):
+
     th1, th2, th3 = symbols("theta_1 theta_2 theta_3")
 
-    # Geometría REAL del URDF
-    h  = 0.15   # altura de shoulder_link
-    L1 = 0.30   # arm_link
-    L2 = 0.45   # forearm_link
+    # geometría
+    self.L1 = 0.30
+    self.L2 = 0.45
+    self.h = 0.15
+    self.l = (self.L1, self.L2, 0.0)
 
-    # Cinemática directa en plano XZ
-    x = L1*cos(th2) + L2*cos(th2 + th3)
+    # cinemática directa
+    r = self.L1*cos(th2) + self.L2*cos(th2 + th3)
 
-    z = h + L1*sin(th2) + L2*sin(th2 + th3)
+    x = r*cos(th1)
+    y = r*sin(th1)
+    z = self.h + self.L1*sin(th2) + self.L2*sin(th2 + th3)
 
-    beta = th2 + th3
+    self.xi_0_p = Matrix([x, y, z])
 
-    xi_0_p = Matrix([
-        x,
-        z,
-        beta
-    ])
+    # Jacobiano correcto
+    self.J = self.xi_0_p.jacobian([th1, th2, th3])
 
-    # Jacobiano
-    J = xi_0_p.jacobian([th1, th2, th3])
-
-    # Variables trayectoria
+    # trayectoria
     t = symbols("t")
 
-    a_0, a_1, a_2, a_3, a_4, a_5 = symbols(
-        "a_0 a_1 a_2 a_3 a_4 a_5"
-    )
+    a = symbols("a_0:6")
+    self.a_0, self.a_1, self.a_2, self.a_3, self.a_4, self.a_5 = a
 
-    lam = (
-        a_0 +
-        a_1*t +
-        a_2*t**2 +
-        a_3*t**3 +
-        a_4*t**4 +
-        a_5*t**5
-    )
-
-    lam_dot = diff(lam, t)
-    lam_dot_dot = diff(lam_dot, t)
-
-    # Guardar
-    self.th1 = th1
-    self.th2 = th2
-    self.th3 = th3
-
-    self.h = h
-    self.L1 = L1
-    self.L2 = L2
-
-    self.xi_0_p = xi_0_p
-    self.J = J
+    self.lam = sum(a[i]*t**i for i in range(6))
+    self.lam_dot = diff(self.lam, t)
+    self.lam_dot_dot = diff(self.lam_dot, t)
 
     self.t = t
 
-    self.a_0 = a_0
-    self.a_1 = a_1
-    self.a_2 = a_2
-    self.a_3 = a_3
-    self.a_4 = a_4
-    self.a_5 = a_5
-
-    self.lam = lam
-    self.lam_dot = lam_dot
-    self.lam_dot_dot = lam_dot_dot
+    self.th1 = th1
+    self.th2 = th2
+    self.th3 = th3
 
   def def_tray(self, t_f:float=2, frec:float=15, 
                th_i:tuple[float]=(0.1, 0.1,0.1), 
@@ -148,54 +116,37 @@ class Robot():
     self.th_dot_dot_m = th_dot_dot_m
     self.t_m = t_m
 
-  def inv_kin(self, x, z, beta=0.0):
+  def inv_kin(self, x, y, z):
 
-    L1 = self.L1
-    L2 = self.L2
-    h  = self.h
+    L1, L2, _ = self.l
 
     x = float(x)
+    y = float(y)
     z = float(z)
 
-    # origen en arm_joint
-    z = z - h
+    # 1. ángulo base
+    th1 = math.atan2(y, x)
 
-    D = (
-        x*x +
-        z*z -
-        L1*L1 -
-        L2*L2
-    ) / (2.0 * L1 * L2)
+    # 2. proyección en plano del brazo
+    r = math.sqrt(x**2 + y**2)
+    z = z - self.h
 
-    D = max(-1.0, min(1.0, D))
+    # 3. ley del coseno
+    cos_t3 = (r**2 + z**2 - L1**2 - L2**2) / (2*L1*L2)
+    cos_t3 = max(-1.0, min(1.0, cos_t3))
 
-    # codo abajo
-    theta3 = math.acos(D)
+    th3 = math.acos(cos_t3)
 
-    theta2 = (
-        math.atan2(z, x)
-        -
-        math.atan2(
-            L2 * math.sin(theta3),
-            L1 + L2 * math.cos(theta3)
-        )
-    )
+    # 4. codo abajo (evita configuraciones raras)
+    if z < 0:
+        th3 = -th3
 
-    theta1 = 0.0
+    k1 = L1 + L2*math.cos(th3)
+    k2 = L2*math.sin(th3)
 
-    print("OBJETIVO")
-    print("x =", x)
-    print("z =", z)
+    th2 = math.atan2(z, r) - math.atan2(k2, k1)
 
-    print("DESPUES DE RESTAR ALTURA")
-    print("x =", x)
-    print("z =", z - h)
-
-    return Matrix([
-        theta1,
-        theta2,
-        theta3
-    ])
+    return Matrix([th1, th2, th3])
   
 
 
