@@ -21,3 +21,16 @@ __pycache__/
 .env
 
 proyecto/src/log/build_*/
+
+# Carpetas de compilación e instalación de ROS/ROS2
+build/
+install/
+log/
+
+# Archivos de Python innecesarios
+__pycache__/
+*.pyc
+
+# Archivos ocultos del sistema o IDEs (opcional)
+.DS_Store
+.vscode/
