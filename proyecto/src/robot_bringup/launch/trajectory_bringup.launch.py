@@ -36,8 +36,9 @@ def generate_launch_description():
   # Nodo de cinemática
   kinematics_node = Node(
     package="robot_kinematics",
-    executable="trajectory_publisher"
-  )
+    executable="trajectory_publisher",
+    output="screen")
+  
   # Nodo de hardware
   hardware_node = Node(
     package="robot_hardware",

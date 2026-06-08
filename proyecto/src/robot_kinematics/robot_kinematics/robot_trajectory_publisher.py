@@ -72,7 +72,8 @@ class PublicadorTrayectoria(Node):
             self.js_current.position[2]), 
       xi_f=(msg.point.x, 
             msg.point.y, 
-            0.30))
+            msg.point.z))
+    
     self.get_logger().info("Posición final EF: {}".format
     (self.robot.xi_m[:, self.robot.muestras - 1]))
 
