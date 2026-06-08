@@ -1,20 +1,9 @@
 #!/usr/bin/env python3
-
 from sympy import *
 import matplotlib.pyplot as plt
 import math
 
-
 class Robot:
-    """
-    Clase Robot adaptada al robot_rrr.urdf.
-    Mantiene la misma interfaz que el robot del profe:
-        def_tray(th_i, xi_f, t_f, frec)
-        inv_kin(x, y, z)
-        imp_tray(), imp_junt(), imp_junt_vel(), imp_junt_acc()
-        atributos: xi_m, th_m, th_dot_m, th_dot_dot_m, muestras, dt
-    """
-
     def __init__(self, l: tuple = (0.15, 0.30, 0.45)):
         self.l = l
         l1, l2, l3 = l
